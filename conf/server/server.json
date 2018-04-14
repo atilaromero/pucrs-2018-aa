@@ -2,7 +2,7 @@
   "tournamentMode" : "round-robin",
   "teamsPerMatch" : 1,
   "teamSize" : 6,
-  "launch" : "key",
+  "launch" : "1s",
   "port" : 12300,
   "backlog" : 10000,
   "agentTimeout" : 4000,
