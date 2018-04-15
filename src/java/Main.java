@@ -1,15 +1,12 @@
 
 
-import org.junit.Before;
-import org.junit.Test;
 import jason.JasonException;
 import jason.infra.centralised.RunCentralisedMAS;
 import massim.Server;
 
-public class ScenarioRunServer {
+public class Main {
 
-	@Before
-	public void setUp() {		
+	public static void main(String[] args) {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -27,10 +24,6 @@ public class ScenarioRunServer {
 			System.out.println("Exception: "+e.getMessage());
 			e.printStackTrace();
 		}
-	}
-
-	@Test
-	public void run() {
 	}
 
 }
