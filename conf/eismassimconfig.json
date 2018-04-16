@@ -8,11 +8,17 @@
   "notifications": false,
   "queued": false,
   "entities": [
-    {"name": "dummy1", "username": "agentA1", "password": "1", "iilang": false, "xml": false},
-    {"name": "dummy2", "username": "agentA2", "password": "1", "iilang": false, "xml": false},
-    {"name": "dummy3", "username": "agentA3", "password": "1", "iilang": false, "xml": false},
-    {"name": "dummy4", "username": "agentA4", "password": "1", "iilang": false, "xml": false},
-    {"name": "dummy5", "username": "agentA5", "password": "1", "iilang": false, "xml": false},
-    {"name": "dummy6", "username": "agentA6", "password": "1", "iilang": false, "xml": false}
+    {"name": "connectionA1", "username": "agentA1", "password": "1", "iilang": false, "xml": false},
+    {"name": "connectionA2", "username": "agentA2", "password": "1", "iilang": false, "xml": false},
+    {"name": "connectionA3", "username": "agentA3", "password": "1", "iilang": false, "xml": false},
+    {"name": "connectionA4", "username": "agentA4", "password": "1", "iilang": false, "xml": false},
+    {"name": "connectionA5", "username": "agentA5", "password": "1", "iilang": false, "xml": false},
+    {"name": "connectionA6", "username": "agentA6", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy1", "username": "agentB1", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy2", "username": "agentB2", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy3", "username": "agentB3", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy4", "username": "agentB4", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy5", "username": "agentB5", "password": "1", "iilang": false, "xml": false},
+    {"name": "dummy6", "username": "agentB6", "password": "1", "iilang": false, "xml": false}
   ]
 }

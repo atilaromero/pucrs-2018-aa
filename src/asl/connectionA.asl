@@ -14,17 +14,13 @@
 	.print("hello massim world.");
 	.
 
-+step(5) 
-	: true 
-<-
-   	?shop(Name,_,_,_,_);
-	.print("I'm going to ",Name);
-	goto(Name);
-	.
 +step(X) 
 	: true 
 <-
 	.print("Received step percept.");
+   	?shop(Name,_,_,_,_);
+	.print("I'm going to ",Name);
+	goto(Name);
 	.
 	
 +actionID(X) 
