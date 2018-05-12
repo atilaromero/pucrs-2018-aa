@@ -86,6 +86,9 @@ public class EISAdapter extends Environment implements AgentListener {
 
         if (ei != null) {
             try {
+                if (ei.getAgents().contains(agName)) {
+                	return percepts;
+                }
                 Map<String,Collection<Percept>> perMap = ei.getAllPercepts(agName);
                 for (String entity: perMap.keySet()) {
                     Structure strcEnt = ASSyntax.createStructure("entity", ASSyntax.createAtom(entity));
@@ -98,7 +101,7 @@ public class EISAdapter extends Environment implements AgentListener {
                     }
                 }
             } catch (PerceiveException e) {
-                logger.log(Level.WARNING, "Could not perceive.");
+                logger.log(Level.WARNING, "Could not perceive." + e.getMessage());
             }
         }
         return percepts;
