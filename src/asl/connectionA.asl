@@ -40,6 +40,30 @@
 //+auction(Id, Storage, Reward, Start, End, Fine, Bid, Time, Items) : true <- .print("auction(id, storage, reward, start, end, fine, bid, time, [required(name1, qty1), ...])").
 //+mission(Id, Storage, Reward, Start, End, Fine, Bid, Time, Items) : true <- .print("mission(id, storage, reward, start, end, fine, bid, time, [required(name1, qty1), ...])").
 
+//Actions
+//goto
+//goto(facility)
+//goto(lat, lon)
+//give(agent, item, amount)
+//receive
+//store(item, amount)
+//retrieve(item, amount)
+//retrieve_delivered(item, amount)
+//assemble(item)
+//assist_assemble(agent)
+//buy(item, amount)
+//deliver_job(job)
+//bid_for_job(job, bid)
+//post_job(reward, duration, storage, item, amount)
+//dump(item, amount)
+//charge
+//recharge
+//continue
+//skip
+//abort
+//gather
+
+
 
 /* Initial beliefs and rules */
 	
