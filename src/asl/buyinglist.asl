@@ -8,3 +8,12 @@ buyingList([]).
 	-buyingList(List)[source(Agent)];
 	-+buyingList(List)[source(self)];
 	.
++!updateBuyingList(Item,Qtd)
+	: buyingList(List)
+<-
+	.delete(required(Item,Qtd),List,NewList);
+	.broadcast(tell,buyingList(NewList));
+	-+buyingList(NewList);
+	.
+
+	

@@ -65,9 +65,10 @@
 
 
 {include("battery.asl")}
+{include("buyinglist.asl")}
+{include("choose_my_action.asl")}
 {include("shop.asl")}
 {include("job.asl")}
-{include("buyinglist.asl")}
 
 realLastAction(skip).
 
@@ -126,13 +127,5 @@ realLastAction(skip).
 <- 
 	Action;
 	-+realLastAction(Action);
-	.
-
-+!updateBuyingList(Item,Qtd)
-	: buyingList(List)
-<-
-	.delete(required(Item,Qtd),List,NewList);
-	.broadcast(tell,buyingList(NewList));
-	-+buyingList(NewList);
 	.
 
