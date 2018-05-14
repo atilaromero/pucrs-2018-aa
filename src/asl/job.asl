@@ -22,6 +22,11 @@
 <-
 	+job(Name,Storage,Reward,Begin,End,Requirements)
 .
++mission(Id, Storage, Reward, Start, End, Fine, Bid, Time, Items)
+	: true
+<-
+	+mission(Id, Storage, Reward, Start, End, Fine, Bid, Time, Items)
+.
 
 +step(Step)
 	: job(Name,Storage,Reward,Begin,End,Requirements) & (Step >= End)
@@ -31,6 +36,13 @@
 	.
 
 @aJob[atomic]
++!chooseJob
+	: mission(Id, Storage, Reward, Start, End, Fine, Bid, Time, Items)
+<-
+	.print("I received a mission, we'll do it");	
+	!call_the_other_agents(Id, Storage, Reward, Start, End, Items);
+	.
+@bJob[atomic]
 +!chooseJob
 	: job(Name,Storage,Reward,Begin,End,Requirements) 
 <-
@@ -53,8 +65,20 @@
 	.broadcast(tell,doingJob(Name,Storage,Reward,Begin,End,Requirements));
 	+doingJob(Name,Storage,Reward,Begin,End,Requirements);
 	-+buyingList(Requirements);
+	-+prebuyList(Requirements);
 	.
 
++doingJob(Name,_,_,_,_,_)
+	: mission(Id, _, _, _, _, _, _, _, _)
+<-
+	.abolish(mission(Id, _, _, _, _, _, _, _, _));
+	.
+
++doingJob(Name,_,_,_,_,_)
+	: job(Name,_,_,_,_,_)
+<-
+	.abolish(job(Name,_,_,_,_,_));
+	.
 	
 //+doingJob(_,_,_,_,_,_)
 //	: true
