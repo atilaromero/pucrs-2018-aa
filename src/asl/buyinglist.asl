@@ -1,4 +1,5 @@
 buyingList([]).
+prebuyList([]).
 
 @updateBuyingList[atomic]
 +buyingList(List)[source(Agent)]
@@ -16,4 +17,20 @@ buyingList([]).
 	-+buyingList(NewList);
 	.
 
-	
+@updatePrebuyList[atomic]
++prebuyList(List)[source(Agent)]
+	: (Agent \== self)
+<-
+	.print("Updating prebuy list");
+	-prebuyList(List)[source(Agent)];
+	-+prebuyList(List)[source(self)];
+	.
++!updatePrebuyList(Item,Qtd)
+	: prebuyList(List)
+<-
+	.delete(required(Item,Qtd),List,NewList);
+	.broadcast(tell,prebuyList(NewList));
+	-+prebuyList(NewList);
+	.
+
+		
