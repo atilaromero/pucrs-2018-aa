@@ -5,6 +5,8 @@ shopsHasItem(Item,Qtd,[shop(IdShop,ItensShop) | ListOfShops],Temp,Result) :- sho
 shopsHasItem(Item,Qtd,[shop(IdShop,ItensShop) | ListOfShops],Temp,Result) :- shopsHasItem(Item,Qtd,ListOfShops,Temp,Result).
 shopsHasItem(Item,Qtd,Result) :- .findall(shop(IdShop,ItensShop),shop(IdShop,_,_,_,ItensShop),ListOfShops) & shopsHasItem(Item,Qtd,ListOfShops,[],Result).
 
+shopsWithItem(Item,Shops) :- .findall(Id,(shop(Id,_,_,_,Itens) & .member(item(Item,_,_), Itens)),Shops).
+shopItems(Item,Price,Qtd,Shop) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Price,Qtd), Itens).
 
 +!choose_shop_to_go_buying(Step)
 	: buyingList(Requirements) & .member(required(Item,Qtd),Requirements) & shopsHasItem(Item,Qtd,ShopList)
