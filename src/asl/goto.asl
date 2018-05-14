@@ -7,6 +7,7 @@
 	: charge(Charge)
 <-
 	+going(Facility);
+	.abolish(wantToLeave);
 	!perform_action(goto(Facility));	
 	.print("Going to ",Facility, " Charge: ", Charge);	
 	.

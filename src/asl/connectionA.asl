@@ -5,6 +5,7 @@
 {include("goto.asl")}
 {include("job.asl")}
 {include("shop.asl")}
+{include("want.asl")}
 
 realLastAction(skip).
 
@@ -16,7 +17,15 @@ realLastAction(skip).
 	: true 
 <-
 	.print("Step:", X);
+	!choose_want(X);
+	!print_want;
 	!choose_my_action(X);
+	.
+	
++!print_want
+	: want(X)
+<-
+	.print("want: ", X);
 	.
 
 +!perform_action(continue) 

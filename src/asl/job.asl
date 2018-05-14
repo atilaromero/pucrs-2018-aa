@@ -58,6 +58,7 @@
 	: job(Name,_,_,_,_,_)
 <-
 	.abolish(job(Name,_,_,_,_,_));
+	-want(job);
 	.
 	
 +jobCompleted(Name)[source(Agent)]

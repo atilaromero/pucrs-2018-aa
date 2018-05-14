@@ -1,16 +1,22 @@
 +!what_to_do_in_facility(Facility, Step)
-	: chargingStation(Facility,_,_,_) & not hasEnoughBattery
+	: chargingStation(Facility,_,_,_) 
+	& want(charge)
 <- 
-	!perform_action(charge);
+	!doCharge;
 	.
 
 +!what_to_do_in_facility(Facility, Step)
-	: shop(Facility,_,_,_,_) & not buyingList([])
+	: shop(Facility,_,_,_,_) 
+	& want(buy)
 <- 
 	!choose_item_to_buy(Step);
 	.
+	
 +!what_to_do_in_facility(Facility, Step)
-	: storage(Facility,_,_,_,_,_) & doingJob(Name,Facility,_,_,_,_)
+	: storage(Facility,_,_,_,_,_)
+	& want(deliver) 
+	& doingJob(Name,Facility,_,_,_,_)
+	& not performDeliver(Name)
 <- 
 	.print("Delivering job ",Step);
 	+performDeliver(Name)
@@ -27,5 +33,7 @@
 	: true
 <- 
 	.print("=============> I have nothing to do at", Facility," at step ",Step);
-	!perform_action(skip);
+	-want(deliver);
+	-want(buy);
+	!choose_my_action(Step);
 	.	

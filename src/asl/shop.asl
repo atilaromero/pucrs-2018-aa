@@ -9,19 +9,23 @@ shopsWithItem(Item,Shops) :- .findall(Id,(shop(Id,_,_,_,Itens) & .member(item(It
 shopItems(Item,Price,Qtd,Shop) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Price,Qtd), Itens).
 
 +!choose_shop_to_go_buying(Step)
-	: buyingList(Requirements) & .member(required(Item,Qtd),Requirements) & shopsHasItem(Item,Qtd,ShopList)
+	: buyingList(Requirements) 
+	& .member(required(Item,Qtd),Requirements) 
+	& shopsWithItem(Item,ShopList)
 <-
 	!goto_oneof(ShopList);
 	.
 +!choose_shop_to_go_buying(Step)
 	: true
 <- 
-	!chooseJob;
+	-want(buy);
 	!choose_my_action(Step);
 	.
 	
 +!choose_item_to_buy(Step)
-	: buyingList(Requirements) & .member(required(Item,Qtd),Requirements) & shopsHasItem(Item,Qtd,ShopList)
+	: buyingList(Requirements) 
+	& .member(required(Item,Qtd),Requirements) 
+	& shopsHasItem(Item,Qtd,ShopList)
 <-
 	!perform_action(buy(Item,Qtd));
 	!updateBuyingList(Item,Qtd);
@@ -30,6 +34,7 @@ shopItems(Item,Price,Qtd,Shop) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Pri
 +!choose_item_to_buy(Step)
 	: true
 <-
-	!choose_shop_to_go_buying(Step);
+	-want(buy);
+	!choose_my_action(Step);
 	.
 	
