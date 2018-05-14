@@ -11,7 +11,6 @@ shopItems(Item,Price,Qtd,Shop) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Pri
 +!choose_shop_to_go_buying(Step)
 	: buyingList(Requirements) & .member(required(Item,Qtd),Requirements) & shopsHasItem(Item,Qtd,ShopList)
 <-
-	!updatePrebuyList(Item,Qtd);
 	!goto_oneof(ShopList);
 	.
 +!choose_shop_to_go_buying(Step)
