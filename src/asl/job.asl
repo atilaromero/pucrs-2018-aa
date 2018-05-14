@@ -110,9 +110,10 @@
 	.
 
 +lastAction(deliver_job)
-	: lastActionResult(successful) & doingJob(Name,_,_,_,_,_)
+	: lastActionResult(successful) & delivered(Name)
 <-
 	.print("### Job Completed ###");
 	.broadcast(tell,jobCompleted(Name));
 	.abolish(doingJob(Name,_,_,_,_,_));
+	.abolish(delivered(Name))
 	.
