@@ -65,7 +65,6 @@
 	.broadcast(tell,doingJob(Name,Storage,Reward,Begin,End,Requirements));
 	+doingJob(Name,Storage,Reward,Begin,End,Requirements);
 	-+buyingList(Requirements);
-	-+prebuyList(Requirements);
 	.
 
 +doingJob(Name,_,_,_,_,_)
