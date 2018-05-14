@@ -5,7 +5,7 @@
 	.
 
 +!what_to_do_in_facility(Facility, Step)
-	: shop(Facility,_,_,_,FList) & not buyingList([])
+	: shop(Facility,_,_,_,_) & not buyingList([])
 <- 
 	!choose_item_to_buy(Step);
 	.
