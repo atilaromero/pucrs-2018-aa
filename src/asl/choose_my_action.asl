@@ -46,7 +46,7 @@
 	!goto_oneof(ChargeStations);
 	.
 +!choose_my_action(Step)
-	: hasItem(_,_) & doingJob(_,Storage,_,_,_,_)
+	: hasItem(Item,_) & doingJob(_,Storage,_,_,_,Items) & .member(Item, Items)
 <-
 	.print("Going delivery item at ",Storage," at step ",Step);	
 	!goto_facility(Storage);
