@@ -13,10 +13,16 @@
 	: storage(Facility,_,_,_,_,_) & doingJob(Name,Facility,_,_,_,_)
 <- 
 	.print("Delivering job ",Step);
-	+delivered(Name)
+	+performDeliver(Name)
 	!perform_action(deliver_job(Name));
 	.
-	
++lastAction(deliver_job)
+	: lastActionResult(successful) & performDeliver(Name)
+<-
+	.print("#############################################");
+	.broadcast(tell,jobCompleted(Name));
+	.abolish(performDeliver(Name))	
+	.
 +!what_to_do_in_facility(Facility, Step)
 	: true
 <- 
