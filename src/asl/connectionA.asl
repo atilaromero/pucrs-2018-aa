@@ -67,8 +67,10 @@
 {include("battery.asl")}
 {include("buyinglist.asl")}
 {include("choose_my_action.asl")}
-{include("shop.asl")}
+{include("facility.asl")}
+{include("goto.asl")}
 {include("job.asl")}
+{include("shop.asl")}
 
 realLastAction(skip).
 
@@ -79,52 +81,19 @@ realLastAction(skip).
 +step(X) 
 	: true 
 <-
+	.print("Step:", X);
 	!choose_my_action(X);
 	.
 
-+lastAction(deliver_job)
-	: lastActionResult(successful) & doingJob(Name,_,_,_,_,_)
-<-
-	.print("### Job Completed ###");
-	.broadcast(tell,jobCompleted(Name));
-	.abolish(doingJob(Name,_,_,_,_,_));
-	.
-
-+!goto_facility(Facility)
-	: Facility
-<-
-	.print("There's no where to go");	
-	.
-+!goto_facility(Facility)
-	: true
-<-
-	+going(Facility);
-	!perform_action(goto(Facility));	
-	.print("Going to ",Facility);	
-	.
-
-+!what_to_do_in_facility(Facility, Step)
-	: shop(Facility,_,_,_,ListOfItens) & not buyingList([])
-<- 
-	!choose_item_to_buy(Step);
-	.
-+!what_to_do_in_facility(Facility, Step)
-	: storage(Facility,_,_,_,_,_) & doingJob(Name,_,_,_,_,_)
-<- 
-	.print("Delivering job ",Step);
-	!perform_action(deliver_job(Name));
-	.
-+!what_to_do_in_facility(Facility, Step)
-	: true
-<- 
-	.print("I have nothing to do at step ",Step);
-	!perform_action(skip);
-	.		
-
 +!perform_action(continue) 
-<- continue.
-+!perform_action(Action)
 <- 
+	.print("perform_action: ", continue, " Charge: ", Charge);
+	continue;
+	.
++!perform_action(Action)
+	: charge(Charge)
+<- 
+	.print("perform_action: ", Action, " Charge: ", Charge);
 	Action;
 	-+realLastAction(Action);
 	.

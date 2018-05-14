@@ -1,7 +1,13 @@
 hasEnoughBattery :- role(_,_,_,Battery,_) & charge(Charge) & (Charge > (Battery*0.8)).
+batteryLow :- role(_,_,_,Battery,_) & charge(Charge) & (Charge <= (Battery*0.4)).
+batteryOut :- role(_,_,_,Battery,_) & charge(Charge) & (Charge <= (Battery*0.2)).
 
-+!recharge_vehicle(Step)
-<- 
-	.print("Recharging at ",Step);
-	!perform_action(charge);
-	.
++batteryLow
+<-
+  .print("BatteryLow");
+  .
+  
++batteryOut
+<-
+  .print("============> BatteryOut");
+  .
