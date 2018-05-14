@@ -1,5 +1,4 @@
 buyingList([]).
-prebuyList([]).
 
 @updateBuyingList[atomic]
 +buyingList(List)[source(Agent)]
