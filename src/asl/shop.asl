@@ -25,7 +25,8 @@ shopItems(Item,Price,Qtd,Shop) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Pri
 +!choose_item_to_buy(Step)
 	: buyingList(Requirements) 
 	& .member(required(Item,Qtd),Requirements) 
-	& shopsHasItem(Item,Qtd,ShopList)
+	& shopItems(Item,_,_,Shop)
+	& facility(Shop)
 <-
 	!perform_action(buy(Item,Qtd));
 	!updateBuyingList(Item,Qtd);

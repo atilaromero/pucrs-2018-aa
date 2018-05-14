@@ -3,6 +3,7 @@
 {include("choose_my_action.asl")}
 {include("facility.asl")}
 {include("goto.asl")}
+{include("going.asl")}
 {include("job.asl")}
 {include("shop.asl")}
 {include("want.asl")}
@@ -23,9 +24,11 @@ realLastAction(skip).
 	.
 	
 +!print_want
-	: want(X)
+	: true
 <-
-	.print("want: ", X);
+	for (want(X)){
+		.print("want: ", X);
+	}
 	.
 
 +!perform_action(continue) 
