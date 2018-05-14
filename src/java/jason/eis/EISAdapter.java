@@ -84,11 +84,8 @@ public class EISAdapter extends Environment implements AgentListener {
 
         clearPercepts(agName);
 
-        if (ei != null) {
+        if (ei != null && ei.getAgents().contains(agName)) {
             try {
-                if (ei.getAgents().contains(agName)) {
-                	return percepts;
-                }
                 Map<String,Collection<Percept>> perMap = ei.getAllPercepts(agName);
                 for (String entity: perMap.keySet()) {
                     Structure strcEnt = ASSyntax.createStructure("entity", ASSyntax.createAtom(entity));
