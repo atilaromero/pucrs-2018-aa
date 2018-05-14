@@ -13,6 +13,7 @@
 	: storage(Facility,_,_,_,_,_) & doingJob(Name,Facility,_,_,_,_)
 <- 
 	.print("Delivering job ",Step);
+	+delivered(Name)
 	!perform_action(deliver_job(Name));
 	.
 	
