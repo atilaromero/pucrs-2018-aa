@@ -1,8 +1,8 @@
 {include("goals/perform_action.asl")}
-{include("goals/job.asl")}
 {include("goals/try_goto.asl")}
-{include("goals/try.asl")} //include other tries first
+{include("goals/try.asl")} //must include any other try (like try_goto) before this one
 {include("plans/charge.asl")}
+{include("plans/fetchItemsFor.asl")}
 {include("plans/maybe_charge.asl")}
 {include("plans/solo.asl")}
 {include("plans/test.asl")}
@@ -13,10 +13,11 @@
 +!step(X)
 <-
 	!solo;
+//	!test_jobItems;
 .
--!step(X)
+-!step(X) //on fail...
 <-
-	skip;
+	!perform_action(skip);
 .
 
 +step(X)<-!step(X).

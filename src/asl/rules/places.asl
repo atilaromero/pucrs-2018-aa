@@ -13,3 +13,6 @@ aShop(Name)            :- shop(Name, Lat, Lon, Restock, Items).
 aStorage(Name)         :- storage(Name, Lat, Lon, Cap, Used, Items).
 aWorkshop(Name)        :- workshop(Name, Lat, Lon).
 aResourceNode(Name)    :- resourceNode(Name, Lat, Lon, Resource).
+
+shopItems(Shop,Item,Price,Qtd) :- shop(Shop,_,_,_,Itens) & .member(item(Item,Price,Qtd), Itens).
+

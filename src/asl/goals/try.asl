@@ -9,7 +9,7 @@
 .
 +!step(X)
 	: try(Action)
-	& lastActionResult("successful")
+	& lastActionResult(successful)
 <-
 	-retries(Action, _);
 	-try(Action);
