@@ -6,7 +6,7 @@ MAS multiagentContest2017 {
 
     agents:
 		connectionA #6;
-//		dummy #6;
+		dummy #6;
 		
 	aslSourcePath:
 		"src/asl";

@@ -27,5 +27,6 @@
 	: try(Action)
 <-
 	-retries(Action, _);
+	.print("failed: ", Action)
 	.fail;
 .
