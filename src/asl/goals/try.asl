@@ -5,12 +5,12 @@
 	+retries(Action, 0);
 	!perform_action(Action);
 	.wait({-try(Action)});
+	-retries(Action, _);
 .
 +!step(X)
 	: try(Action)
 	& lastActionResult("successful")
 <-
-	.print("Action done: ", Action);
 	-retries(Action, _);
 	-try(Action);
 .
@@ -21,11 +21,11 @@
 <-
 	-retries(Action, Z);
 	+retries(Action, Z+1);
-	.print(Z);
 	!perform_action(Action);
 .
 +!step(X)
 	: try(Action)
 <-
+	-retries(Action, _);
 	.fail;
 .

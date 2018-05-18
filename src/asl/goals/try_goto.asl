@@ -12,6 +12,12 @@
 .
 +!step(X)
 	: try(goto(Y))
+	& batteryOut
+<-
+	!perform_action(recharge);
+.
++!step(X)
+	: try(goto(Y))
 <-
 	!perform_action(goto(Y));
 .

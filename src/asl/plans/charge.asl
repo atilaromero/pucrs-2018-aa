@@ -1,11 +1,11 @@
-+!plan_charge
++!charge
 	: aChargingStation(Name)
 <-
 	!try(goto(Name));
 	!try(charge);
 .
 
-+!plan_charge
++!charge
 <-
 	.print("No charging station");
 	.fail;
