@@ -20,5 +20,11 @@ O código fonte do time "dummy" foi copiado para o outro time, "connectionA" e s
 
 ```
 
-Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. Os dois principais problemas do time "dummy" eram
- - Todos os agentes 
+Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. Os principais problemas do time "dummy" eram:
+ - Os agentes se ajudam para completar o mesmo trabalho, o que é positivo, mas eles frequentemente vão todos na mesma loja para comprar os items.
+ - Os agentes não se recarregam adequadamente.
+ - Mais de um agente compra um mesmo item para um mesmo trabalho.
+ - Apenas o último trabalho percebido é guardado em memória.
+ - Os agentes ficam ociosos depois de fazer uma entrega, porque um novo trabalho só é iniciado quando o anterior termina.
+
+
