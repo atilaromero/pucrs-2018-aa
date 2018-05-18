@@ -1,19 +1,19 @@
 +!pick_job
-	: job(Id, _, _, _, _, _)
+	: aJob(Id)
 	& not doing(Id, _)
 	& .my_name(Me)
 	& .all_names(All)
 <-
 	+doing(Id, Me);
+	.broadcast(tell, doing(Id, Me));
 	for (.member(X, All)) {
 		.send(X, askOne, doing(Id, X), Resp);
 		+Resp;
 	}
-	!check_mine;
 .
 +!pick_job<-.fail.
 
-+!check_mine
++!check_job_solo
 	: .my_name(Me)
 	& doing(Id, Me)
 	& doing(Id, X)
@@ -22,5 +22,6 @@
 	.abolish(doing(Id, Me));
 	.broadcast(tell, ~doing(Id, Me));
 	!pick_job;
+	!check_job_solo;
 .
-+!check_mine<-true.
++!check_job_solo<-true.
