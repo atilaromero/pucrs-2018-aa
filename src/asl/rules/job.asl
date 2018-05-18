@@ -5,22 +5,4 @@
 
 aJob(Id) :- job(Id, Storage, Reward, Start, End, Items).
 
-+!pick_job
-	: aJob(Id)
-	& not doing(_)
 
-
--doing(X)<-.print("not doing").
-
-+job(Id, Storage, Reward, Start, End, Items)
-	: not doing(_)
-<-
-	+doing(Id);
-	.broadcast(tell, doing(Id));
-.
-+doing(Id)[source(Ag)]
-	: .my_name(Me)
-	& Me > Ag
-<-
-	.print("-->--", Id, " ", Ag)
-.

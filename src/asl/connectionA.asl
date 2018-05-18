@@ -1,4 +1,5 @@
 {include("goals/perform_action.asl")}
+{include("goals/pick_job.asl")}
 {include("goals/try_goto.asl")}
 {include("goals/try.asl")} //include other tries first
 {include("plans/charge.asl")}
@@ -11,8 +12,7 @@
 
 +!step(X)
 <-
-	.print("Step ", X);
-	skip;
+	!solo;
 .
 -!step(X)
 <-
