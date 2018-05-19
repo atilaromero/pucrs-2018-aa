@@ -21,7 +21,8 @@
 .
 
 +step(X)<-!step(X).
-+bye
++bye[source(perceipt)]
 <-
 	.print("### Simulation has finished ###");
+	.abolish(_);
 .
