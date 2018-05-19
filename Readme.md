@@ -29,6 +29,7 @@ O código fonte do time "dummy" foi copiado para o outro time, "connectionA" e s
 ```
 
 Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. À primeira vista, os principais pontos a serem trabalhados no time "dummy" eram:
+
  - Os agentes se ajudam para completar o mesmo trabalho, o que é positivo, mas eles frequentemente vão todos à mesma loja para comprar itens diferentes.
  - Os agentes não se recarregam adequadamente.
  - Apenas o último trabalho percebido é guardado em memória.
