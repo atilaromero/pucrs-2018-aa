@@ -105,4 +105,7 @@ Usando esta abordagem, passa a ser possível usar um plano do tipo:
 ```
  - "!pick_job_solo;" e "!check_job_solo;" encontram um trabalho para o agente, que será o único do time a fazê-lo.
  - "!fetchItemsFor(Job);" internamente usa as instruções "!try(goto(Shop))" e "!try(buy(Item, Qtd))" para comprar items.
- - 
+ - "!maybe_charge;" verifica se a bateria está baixa (valor arbitrário de <40%) e, se estiver, vai até uma chargingStation e recarrega.
+ - "!try(goto(Storage));" e "!try(deliver_job(Job));" são as abstrações de alto nível criadas: os detalhes de envio das jogadas e leitura dos resultados são tratados mas não atrapalham a descrição do plano. "!try(deliver_job(Job));" usa um mecanismo similar ao mostrado para "+!try(goto(Y))", só que conta as tentativas e, se falhar 5 vezes, marca que o flano falhou usando ".fail".
+
+## Situação atual do time
