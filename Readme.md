@@ -27,4 +27,6 @@ Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. Os 
  - Apenas o último trabalho percebido é guardado em memória.
  - Os agentes ficam ociosos depois de fazer uma entrega, porque um novo trabalho só é iniciado quando o anterior termina.
 
+Para tentar melhorar os agentes em algum destes aspectos, foram feitas várias modificações de maneira incremental. No entanto, este processo se mostrou extremamente difícil, porque era difícil evitar a propagação de efeitos colaterais. Ou seja, era comum que ao tentar corrigir determinado comportamento, outro comportamento também fosse afetado.
 
+Mais tarde, foi concluído que esta dificuldade estava relacionada com o tempo de vida dos planos em relação às rodadas do jogo. Ocorre que quando uma rodada é iniciada, é esperada uma reposta relativamente rápida que indique qual a jogada do agente. Para chegar nesta resposta, segue-se uma série de passos, definidos por objetivos parciais, mas que terminam por entregar a resposta ao servidor, que pode ser, por exemplo, a ação de ir até uma loja. No entanto, para fazer um planejamento mais elaborado, é preciso definir várias etapas, como ir à loja, comprar um produto e levar a um depósito. Mas o problema é, como 
