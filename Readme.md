@@ -12,7 +12,7 @@ Para escolher quantos times irão competir simultaneamente, alterar a variável 
 
 ## Etapas iniciais
 
-O código-fonte original dos agentes foi criado pelo colega Tabajara e disponibilizado pelo professor Bordini. Assim que foi executado com sucesso, o próximo passo foi entender o código do time "dummy" e usá-lo como ponto de partida para criação de um novo time. O time "dummy" é propositalmente básico, oferecendo um ponto de partida para criaçào de algo mais elaborado.
+O código-fonte original dos agentes foi criado pelo colega Tabajara e disponibilizado pelo professor Bordini. Assim que foi executado com sucesso, o próximo passo foi entender o código do time "dummy" e usá-lo como ponto de partida para criação de um novo time. O time "dummy" é propositalmente básico, oferecendo um ponto de partida para criação de algo mais elaborado.
 
 O código fonte do time "dummy" foi copiado para o outro time, "connectionA" e separado em arquivos menores por funcionalidade, para facilitar o entendimento, usando instruções do tipo:
 ```
@@ -21,9 +21,8 @@ O código fonte do time "dummy" foi copiado para o outro time, "connectionA" e s
 ```
 
 Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. À primeira vista, os principais pontos a serem trabalhados no time "dummy" eram:
- - Os agentes se ajudam para completar o mesmo trabalho, o que é positivo, mas eles frequentemente vão todos à mesma loja para comprar os items.
+ - Os agentes se ajudam para completar o mesmo trabalho, o que é positivo, mas eles frequentemente vão todos à mesma loja para comprar itens diferentes.
  - Os agentes não se recarregam adequadamente.
- - Mais de um agente compra um mesmo item para um mesmo trabalho.
  - Apenas o último trabalho percebido é guardado em memória.
  - Itens não usados não são reaproveitados.
  - Não é feita busca por trabalhos similares que poderiam ser simultâneos.
@@ -48,7 +47,7 @@ A solução encontrada foi a criação de um tipo de plano, chamado de "!try", e
 
  - A instrução "+try(goto(Y));" acrescenta a variável "try" a base de conhecimento. Essa variável indica que há um plano em execução.
  - A segunda instrução, "!step(X);", força a execução do plano de curto prazo, que também é iniciado quando há um evento do tipo "+step(X)". A resposta a este evento, informando ao servidor a jogada do agente, será tratada pelo trecho de código que tratar eventos do tipo "+!step(X): try(goto(Y)) <-". 
- - Na terceira instrução, ".wait({-try(goto(Y))});" aguarda que a variável "try" não esteja mais na base de conhecimento. Quando isto ocorrer o plano será concluído e, se fizer parte de um plano maior, o próximo passo será executado.
+ - A terceira instrução, ".wait({-try(goto(Y))});" aguarda que a variável "try" não esteja mais na base de conhecimento. Quando isto ocorrer o plano será concluído e, se fizer parte de um plano maior, o próximo passo será executado.
 
 A variável "try" é retirada da base de conhecimento quando o agente chega ao seu destino:
 ```
@@ -109,3 +108,24 @@ Usando esta abordagem, passa a ser possível usar um plano do tipo:
  - "!try(goto(Storage));" e "!try(deliver_job(Job));" são as abstrações de alto nível criadas: os detalhes de envio das jogadas e leitura dos resultados são tratados mas não atrapalham a descrição do plano. "!try(deliver_job(Job));" usa um mecanismo similar ao mostrado para "+!try(goto(Y))", só que conta as tentativas e, se falhar 5 vezes, marca que o flano falhou usando ".fail".
 
 ## Situação atual do time
+  
+  A estratégia atual é baseada em cada veículo pegar um trabalho diferente. Ao se responsabilizar por um trabalho, o agente avisa os outros e aguarda resposta positiva. Se algum agente também tiver escolhido aquele trabalho, avisa. Se houver disputa, a seleção de qual agente ficará com o trabalho é feita por ordem alfabética/numérica: o menor ganha.
+
+  Atualmente o time "connectionA" ganha do time "dummy" e termina a partida com mais dinheiro do que começou, o que é um grande progresso, pois antes da nova abordagem o time "connectionA" além de perder do "dummy", terminava a partida com menos dinheiro do que tinha começado. Mas ainda existem muitas possíveis melhorias:
+
+  - Considerar a carga do veículo. Os 2 drones param de trabalhar logo no início, pois tentam pegar todos os itens de um trabalho e excedem sua carga total. Talvez seja necessário um plano separado para eles. Com certeza é preciso verificar o peso dos itens.
+  - Alguns veículos param de trabalhar quando estão fazendo um trabalho que por algum motivo não é mais válido, ou porque expirou, ou porque foi completado por outro time. Requer a criação de algum mecanismo para desistir do trabalho atual.
+  - A escolha dos trabalhos não leva em consideração preço, itens ou data de expiração.
+  - Os agentes não ajudam um ao outro. Esse item talvez não seja alterado, pois seria seguir uma estratégia diferente da atual.
+  - Um agente não faz mais de um trabalho ao mesmo tempo.
+
+# Github
+
+O código-fonte do trabalho está disponível em:
+
+https://github.com/atilaromero/pucrs-2018-aa
+
+Para entrega do relatório, o arquivo Readme.md do projeto (este documento), foi convertido em pdf com o comando
+```
+pandoc Readme.md -s -o relatorio.pdf
+```
