@@ -1,3 +1,11 @@
+# Relatório
+  
+  Primeira entrega
+  
+  Aluno: Atila Leites Romero
+  
+  
+
 # Execução
 
 Ao invés de rodar o contest usando JUnit, como era feito na versão original, foi criada uma classe Main em src/java. Para iniciar o servidor através do eclipse, uma opção é clicar com o botão direito sobre o arquivo src/java/Main.java e escolher a opção "Run As" -> "Java Application".
@@ -26,6 +34,8 @@ Em seguida, foram feitas tentativas de melhorar o comportamento dos agentes. À 
  - Apenas o último trabalho percebido é guardado em memória.
  - Itens não usados não são reaproveitados.
  - Não é feita busca por trabalhos similares que poderiam ser simultâneos.
+
+## Aprimoramento
 
 Para tentar melhorar os agentes em algum destes aspectos, foram feitas várias modificações de maneira incremental. No entanto, este processo se mostrou extremamente difícil, porque era difícil evitar a propagação de efeitos colaterais. Ou seja, era comum que ao tentar corrigir determinado comportamento, outro comportamento também fosse afetado.
 
