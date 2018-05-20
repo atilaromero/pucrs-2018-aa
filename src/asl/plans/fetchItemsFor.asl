@@ -18,4 +18,7 @@
 	!try(goto(Shop));
 	!fetchItemsFor(Job);
 .
++!fetchItemsFor(Job)
+	: needJobItem(Job, Item, Qj)
+<-.fail.
 +!fetchItemsFor(Job)<- true.

@@ -1,11 +1,14 @@
-{include("goals/perform_action.asl")}
-{include("goals/try_goto.asl")}
-{include("goals/try.asl")} //must include any other try (like try_goto) before this one
+{include("goals/solo.asl")}
+{include("goals/test.asl")}
 {include("plans/charge.asl")}
 {include("plans/fetchItemsFor.asl")}
+{include("plans/job_done.asl")}
+{include("plans/leave_job.asl")}
 {include("plans/maybe_charge.asl")}
-{include("plans/solo.asl")}
-{include("plans/test.asl")}
+{include("plans/perform_action.asl")}
+{include("plans/pick_job_solo.asl")}
+{include("plans/try_goto.asl")}
+{include("plans/try.asl")} //must include any other try (like try_goto) before this one
 {include("rules/battery.asl")}
 {include("rules/job.asl")}
 {include("rules/places.asl")}
