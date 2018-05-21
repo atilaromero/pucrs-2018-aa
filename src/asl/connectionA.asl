@@ -1,5 +1,5 @@
-{include("goals/solo.asl")}
-{include("goals/test.asl")}
+{include("plans/solo.asl")}
+{include("plans/test.asl")}
 {include("plans/charge.asl")}
 {include("plans/fetchItemsFor.asl")}
 {include("plans/job_done.asl")}

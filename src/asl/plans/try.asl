@@ -5,12 +5,9 @@
 	+retries(Action, 0);
 	!perform_action(Action);
 	.wait({-try(Action)});
-	if (failed(try(Action))) {
-		-failed(try(Action));
-		.fail;
-	}
 	-retries(Action, _);
 .
+-!try(Action)<-.print("FAIL", try(Action));.fail.
 +!step(X)
 	: try(Action)
 	& lastActionResult(successful)
@@ -30,9 +27,8 @@
 +!step(X)
 	: try(Action)
 <-
+	.print("failed: ", Action);
 	-retries(Action, _);
+	.fail_goal(try(Action));
 	-try(Action);
-	+failed(try(Action));
-	.print("failed: ", Action)
-	.fail;
 .

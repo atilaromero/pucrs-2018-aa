@@ -1,23 +1,22 @@
 +!try(goto(Y))
 <-
-	+try(goto(Y));
 	!step(X);
-	.wait({-try(goto(Y))});
+	.wait(false);
 .
 +!step(X)
-	: try(goto(Y))
+	: .intend(try(goto(Y)))
 	& facility(Y)
 <-
-	-try(goto(Y));
+	.succeed_goal(try(goto(Y)));
 .
 +!step(X)
-	: try(goto(Y))
+	: .intend(try(goto(Y)))
 	& batteryOut
 <-
 	!perform_action(recharge);
 .
 +!step(X)
-	: try(goto(Y))
+	: .intend(try(goto(Y)))
 <-
 	!perform_action(goto(Y));
 .
