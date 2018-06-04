@@ -7,6 +7,7 @@
 {include("plans/maybe_charge.asl")}
 {include("plans/perform_action.asl")}
 {include("plans/pick_job_solo.asl")}
+{include("plans/retries.asl")}
 {include("plans/try_goto.asl")}
 {include("plans/try.asl")} //must include any other try (like try_goto) before this one
 {include("rules/battery.asl")}
@@ -14,10 +15,20 @@
 {include("rules/places.asl")}
 
 +!step(X)
+:	.intend(test_charge_fail_retry)
 <-
-	!solo;
-//	!test_jobItems;
+	!perform_action(skip);
 .
++!step(X)
+<-
+	!test_charge_fail_retry;
+.
+
+//+!step(X)
+//<-
+//	!solo;
+//	!test_jobItems;
+//.
 -!step(X) //on fail...
 <-
 	!perform_action(skip);
