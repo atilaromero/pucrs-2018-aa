@@ -15,13 +15,13 @@ carryingOrStored(Item, Qtd, Storage)
 carryingOrStored(Item, Qtd, Storage) 
 	:- stored(Item, Qs, Storage).// I have this item only with in storage
 		
-needJobItem(Job, Item, Qtd) 
+needBuyItemForJob(Job, Item, Qtd) 
 	:- jobItems(Job, Item, Qj) &              // Job requires item
 	   job(Job, Storage, _, _, _, _) & 
        carryingOrStored(Item, Qh, Storage) &  // I have this item
        .max([Qj-Qh,0],Qtd) &                  // but still need Qtd
        Qtd > 0. 
-needJobItem(Job, Item, Qj)  
+needBuyItemForJob(Job, Item, Qj)  
 	:- jobItems(Job, Item, Qj) &               // Job requires item  
 	   job(Job, Storage, _, _, _, _) & 
        not carryingOrStored(Item, _, Storage). // I don't have this item

@@ -1,5 +1,5 @@
 +!fetchItemsFor(Job) // reached Shop, and Shop has needed items
-	: needJobItem(Job, Item, Qj)   // need Item
+	: needBuyItemForJob(Job, Item, Qj)   // need Item
 	& shopItems(Shop,Item,_,Qs)    // Shop has Item
 	& facility(Shop)               // reached Shop
 	& item(Item, Volume, _, _)     // 1 Item has this Volume
@@ -11,7 +11,7 @@
 	!fetchItemsFor(Job); // check for more items
 .
 +!fetchItemsFor(Job) // choose a store to go to
-	: needJobItem(Job, Item, Qj)   // need Item
+	: needBuyItemForJob(Job, Item, Qj)   // need Item
 	& shopItems(Shop,Item,_,Qs)    // Shop has Item
 	& item(Item, Volume, _, _)     // 1 Item has this Volume
 	& freeLoad(Free)               // my free space
@@ -22,27 +22,33 @@
 	!fetchItemsFor(Job);
 .
 +!fetchItemsFor(Job) // couldn't buy anything
-	: needJobItem(Job, MyItem, _)  // need to buy MyItem for Job
-	& hasItem(MyItem,Qtd)	       // I'm carrying MyItem (I will store this)
+	: needBuyItemForJob(Job, Item, _)   // still need something
+<-
+	!unloadFor(Job);
+.	
+// don't need anything, fetch phase finished
++!fetchItemsFor(Job)<- true.
+
++!unloadFor(Job)
+	: hasItem(Item,Qtd)	           // I'm carrying Item
+	& jobItems(Job, Item, _)       // job requires Item
 <-	
-	.print("I'm carrying MyItem (I will store this)");
+	.print("I'm carrying a required Item for Job: I will store this");
 	?job(Job, Storage, _, _, _, _);
 	!storeItem(Item, Qtd, Storage);	
 	!fetchItemsFor(Job);
 .
-+!fetchItemsFor(Job) // couldn't buy anything, but not carrying useful Items
-	: needJobItem(Job, Item, _)    // need to buy Item for Job
-	& hasItem(AnotherItem,Qtd)	   // I'm carrying AnotherItem (I will toss this)
++!unloadFor(Job)
+	: hasItem(Item,Qtd)	           // I'm carrying Item
+	& not jobItems(Job, Item, _)   // item not required for Job
 <-	
 	.print("I'm carrying a useless item (I will toss this)");
-	!retries(4, tossItem(AnotherItem, Qtd));	
+	!retries(4, tossItem(Item, Qtd));	
 	!fetchItemsFor(Job);
 .
-+!fetchItemsFor(Job)
-	: needJobItem(Job, Item, Qj)
-<-	
-	.print("still need items, but I can't buy it (no offers or too heavy)")
-	.fail
+
++!unloadFor(Job)
+<-
+	.print("could not unload");
+	.fail;
 .
-// don't need anything, fetch phase finished
-+!fetchItemsFor(Job)<- true.
