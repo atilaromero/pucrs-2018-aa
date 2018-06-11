@@ -29,6 +29,24 @@
 	: needBuyItemForJob(Job, Item, _)   // still need something
 <-
 	.print("couldn't buy anything");
+	.print("===================================================");
+	for (hasItem(X, Y)) {
+		.print(hasItem(X, Y));
+	}
+	for (stored(X, Y, Z)) {
+		.print(stored(X, Y, Z));
+	}
+	for (carryingOrStored(X, Y, Z)) {
+		.print(carryingOrStored(X, Y, Z));
+	}
+	for (needBuyItemForJob(Job, Y, Z)) {
+		.print(needBuyItemForJob(Job, Y, Z));
+	}
+	for (jobItems(Job, Y, Z)) {
+		.print(jobItems(Job, Y, Z));
+	}
+	.print("===================================================");
+	
 	!unloadFor(Job);
 .	
 // don't need anything, fetch phase finished

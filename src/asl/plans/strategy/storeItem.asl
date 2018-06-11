@@ -1,7 +1,12 @@
 +!storeItem(Item, Qtd, Storage)
+	: not facility(Storage)
 <-
 	!maybe_charge;
 	!try(goto(Storage));
+	!storeItem(Item, Qtd, Storage)
+.
++!storeItem(Item, Qtd, Storage)
+<-
 	!retries(4, try(store(Item, Qtd)));
 	!updateStored(Item, Qtd, Storage)
 .
@@ -20,8 +25,16 @@
 +!tossItem(Item, Qtd)
 <-	
 	?aStorage(Storage);
+	!tossItem(Item, Qtd, Storage)
+.
++!tossItem(Item, Qtd, Storage)
+	: not facility(Storage)
+<-	
 	!maybe_charge;
 	!try(goto(Storage));
+.
++!tossItem(Item, Qtd, Storage)
+<-	
 	!retries(4, try(store(Item, Qtd)));
 	!updateTossed(Item, Qtd, Storage)
 .

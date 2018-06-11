@@ -11,9 +11,11 @@ carryingOrStored(Item, Qtd, Storage)
 	&  stored(Item, Qs, Storage) // I also have some on storage
 	&  Qtd = Qh + Qs.            // total
 carryingOrStored(Item, Qtd, Storage) 
-	:- hasItem(Item, Qtd).       // I have this item only with me
+	:- hasItem(Item, Qtd)        // I have this item only with me
+	&  not stored(Item, _, Storage).
 carryingOrStored(Item, Qtd, Storage) 
-	:- stored(Item, Qs, Storage).// I have this item only with in storage
+	:- not hasItem(Item, _)
+	& stored(Item, Qs, Storage).// I have this item only with in storage
 		
 needBuyItemForJob(Job, Item, Qtd) 
 	:- jobItems(Job, Item, Qj) &              // Job requires item
