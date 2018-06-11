@@ -1,34 +1,33 @@
-{include("plans/solo.asl")}
-{include("plans/test.asl")}
 {include("plans/charge.asl")}
-{include("plans/fetchItemsFor.asl")}
 {include("plans/job_done.asl")}
 {include("plans/leave_job.asl")}
 {include("plans/maybe_charge.asl")}
 {include("plans/perform_action.asl")}
-{include("plans/pick_job_solo.asl")}
-{include("plans/retries.asl")}
-{include("plans/try_goto.asl")}
-{include("plans/try.asl")} //must include any other try (like try_goto) before this one
+{include("plans/test.asl")}
+{include("plans/step_layer/retries.asl")}
+{include("plans/step_layer/try_goto.asl")}
+{include("plans/step_layer/try.asl")} //must include any other try (like try_goto) before this one
+{include("plans/strategy/fetchItemsFor.asl")}
+{include("plans/strategy/pick_job_solo.asl")}
+{include("plans/strategy/solo.asl")}
 {include("rules/battery.asl")}
 {include("rules/job.asl")}
 {include("rules/places.asl")}
 
-+!step(X)
-:	.intend(test_charge_fail_retry)
-<-
-	!perform_action(skip);
-.
-+!step(X)
-<-
-	!test_charge_fail_retry;
-.
-
+//+!step(X)
+//:	.intend(test_charge_fail_retry)
+//<-
+//	!perform_action(skip);
+//.
 //+!step(X)
 //<-
-//	!solo;
-//	!test_jobItems;
+//	!test_charge_fail_retry;
 //.
+
++!step(X) // if step_layer did not kick in, we got no active strategy
+<-
+	!solo;
+.
 -!step(X) //on fail...
 <-
 	!perform_action(skip);

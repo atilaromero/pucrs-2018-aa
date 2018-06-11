@@ -2,7 +2,7 @@
 	: aChargingStation(Name)
 <-
 	!try(goto(Name));
-	!do_charge;
+	!do_charge; // at charging station ?Name
 .
 
 +!charge
@@ -10,9 +10,10 @@
 	.print("No charging station");
 	.fail;
 .
-+!do_charge
++!do_charge // at charging station ?Name
 	: not batteryFull
 <- 
-	!try(charge);
+	!retries(4,try(charge)); // this is the Action charge, not the intention !charge
+	!do_charge;   // repeat
 .
 +!do_charge<-true.

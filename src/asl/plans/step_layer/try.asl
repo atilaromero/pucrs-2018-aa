@@ -11,7 +11,8 @@
 	.print("succeed_goal ", try(Action));
 	.succeed_goal(try(Action));
 .
-+!step(X)
+
++!step(X)	//lastActionResult not successful
 	: .intend(try(Action))
 <-
 	.print("fail_goal ", try(Action));
