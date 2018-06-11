@@ -27,7 +27,7 @@
 //	!test_charge_fail_retry;
 //.
 
-+!step(X) // if step_layer did not kick in, we got no active strategy
++!step(X) // if step_layer did not kick in, we have no active strategy
 <-
 	!solo;
 .

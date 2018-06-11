@@ -11,10 +11,13 @@
 +!test_charge_fail_retry
 <-
 	!retries(4, try(charge));
-	.print("alsdkjflsakdjfsa");
+	.print("should not print this");
 .
 -!test_charge_fail_retry
-<-.print("FAILED ========>",test_charge_fail_retry).
+<-	
+	.print("FAILED ========>",test_charge_fail_retry)
+	!try(skip);
+.
 
 
 +!test_jobItems
