@@ -11,6 +11,7 @@
 {include("plans/strategy/pick_job_solo.asl")}
 {include("plans/strategy/solo.asl")}
 {include("plans/strategy/storeItem.asl")}
+{include("plans/strategy/unloadFor.asl")}
 {include("rules/battery.asl")}
 {include("rules/items.asl")}
 {include("rules/job.asl")}

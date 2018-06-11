@@ -7,7 +7,9 @@
 	& Free >= Volume                // I can carry that
 <-
 	.print("reached Shop, and Shop has needed items");
-	?.min([Qj, Qs], Qtd) // don't buy more than needed, don't buy more than store has 
+	?.min([Qj, Qs], CanBuy) // don't buy more than needed, don't buy more than store has
+	?CanCarry = math.floor(Free/Volume)
+	?.min([CanCarry, CanBuy], Qtd)
 	!retries(4, try(buy(Item, Qtd)));
 	!fetchItemsFor(Job); // check for more items
 .
@@ -31,44 +33,3 @@
 .	
 // don't need anything, fetch phase finished
 +!fetchItemsFor(Job)<- true.
-
-+!unloadFor(Job)
-	: hasItem(Item,_)	           // I'm carrying Item
-	& jobItems(Job, Item, _)       // job requires Item
-<-	
-	!storeAllFor(Job);
-	!fetchItemsFor(Job);
-.
-+!unloadFor(Job)
-	: hasItem(Item,Qtd)	           // I'm carrying Item
-	& not jobItems(Job, Item, _)   // item not required for Job
-<-
-	!tossAllUseless;	
-	!fetchItemsFor(Job);
-.
-+!unloadFor(Job)
-<-
-	.print("could not unload");
-	.fail;
-.
-
-+!storeAllFor(Job)
-	: hasItem(Item,Qtd)	           // I'm carrying Item
-	& jobItems(Job, Item, _)       // job requires Item
-<-	
-	.print("I'm carrying a required Item for Job: I will store this", item(Item));
-	?job(Job, Storage, _, _, _, _);
-	!storeItem(Item, Qtd, Storage);	
-	!storeAllFor(Job);
-.
-+!storeAllFor(Job)<-true. //done
-
-+!tossAllUseless
-	: hasItem(Item,Qtd)	           // I'm carrying Item
-	& not jobItems(Job, Item, _)   // item not required for Job
-<-
-	.print("I'm carrying a useless item (I will toss this)");
-	!retries(4, tossItem(Item, Qtd));	
-	!tossAllUseless;
-.
-+!tossAllUseless<-true. //done
