@@ -10,6 +10,7 @@
 {include("plans/strategy/fetchItemsFor.asl")}
 {include("plans/strategy/pick_job_solo.asl")}
 {include("plans/strategy/solo.asl")}
+{include("plans/strategy/storeItem.asl")}
 {include("rules/battery.asl")}
 {include("rules/items.asl")}
 {include("rules/job.asl")}

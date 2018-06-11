@@ -1,21 +1,21 @@
-+!retries(M,try(Action))
++!retries(M, Action)
 <-
-	!!sub_retries(M, M, try(Action));
+	!!sub_retries(M, M, Action);
 	.wait(false);
 .
 
-+!sub_retries(M, N, try(Action))
++!sub_retries(M, N, Action)
 <-
-	!try(Action);
-	.succeed_goal(retries(M, try(Action)));
+	!Action;
+	.succeed_goal(retries(M, Action));
 .
--!sub_retries(M, N, try(Action))
+-!sub_retries(M, N, Action)
 	: N > 1
 <-
-	!sub_retries(M, N-1, try(Action));
+	!sub_retries(M, N-1, Action);
 .
 
--!sub_retries(M, N, try(Action))
+-!sub_retries(M, N, Action)
 <-
-	.fail_goal(retries(M,try(Action)));
+	.fail_goal(retries(M,Action));
 .

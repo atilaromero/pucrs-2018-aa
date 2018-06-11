@@ -33,9 +33,9 @@
 +!updateTossed(Item, Qtd, Storage)
 <-
 	-+tossed(Item, Qtd, Storage)[source(self)]
-	.broadcast(tell, tossed(Item, Qtd+Qtd2, Storage))
+	.broadcast(tell, tossed(Item, Qtd, Storage))
 .
 +tossed(Item, Qtd, Storage)[source(X)]
 <-
-	-+tossed(Item, Qtd, Storage)[source(self)]
+	+tossed(Item, Qtd, Storage)[source(self)]
 .
