@@ -36,6 +36,9 @@
 	for (stored(X, Y, Z)) {
 		.print(stored(X, Y, Z));
 	}
+	for (tossed(X, Y, Z)) {
+		.print(tossed(X, Y, Z));
+	}
 	for (carryingOrStored(X, Y, Z)) {
 		.print(carryingOrStored(X, Y, Z));
 	}
