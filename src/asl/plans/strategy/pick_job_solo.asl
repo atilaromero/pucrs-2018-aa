@@ -1,6 +1,7 @@
 +!pick_job_solo // select a job no one is doing
 	: aJob(Id)
 	& not doing(Id, _)
+	& not avoidJob(Id) // not failed before
 <-
 	?.my_name(Me);
 	+doing(Id, Me);
@@ -16,7 +17,12 @@
 	!check_job_solo;
 .
 // couldn't select a job (maybe we just started and there are not enough jobs yet)
-+!pick_job_solo<-.fail.
++!pick_job_solo
+<-
+	// skip to next round to avoid loop: after this fail, !solo will try again
+	!try(skip); 
+	.fail
+.
 
 +!check_job_solo //found a conflict
 	: .my_name(Me)

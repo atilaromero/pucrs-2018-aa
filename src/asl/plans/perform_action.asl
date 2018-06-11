@@ -4,7 +4,10 @@
 //	?lastActionResult(Result);
 //	.print(lastAction(Type));
 //	.print(lastActionResult(Result));
-//	?charge(Charge)
-//	.print("perform_action: ", Action, " Charge: ", Charge);
+
+	?charge(Charge)
+	?freeLoad(Free);
+	.print("perform_action: ", Action, charge(Charge), freeLoad(Free));
+
 	Action;
 .

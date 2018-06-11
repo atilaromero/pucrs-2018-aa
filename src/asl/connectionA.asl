@@ -11,8 +11,10 @@
 {include("plans/strategy/pick_job_solo.asl")}
 {include("plans/strategy/solo.asl")}
 {include("rules/battery.asl")}
+{include("rules/items.asl")}
 {include("rules/job.asl")}
 {include("rules/places.asl")}
+{include("rules/self.asl")}
 
 //+!step(X)
 //:	.intend(test_charge_fail_retry)

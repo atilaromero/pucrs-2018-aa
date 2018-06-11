@@ -25,7 +25,12 @@
 .
 // job failed
 -!solo
+	: .my_name(Me)
+	& doing(Job, Me)
 <-
 	!leave_job(Job);
-	!step(_)
+	+avoidJob(Job);
+	!step(_);
 .
+// got no jobs? try again.
+-!solo<-!step(_).
