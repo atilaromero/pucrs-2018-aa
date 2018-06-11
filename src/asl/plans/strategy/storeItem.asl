@@ -51,6 +51,11 @@
 	.broadcast(tell, tossed(Item, Qtd, Storage))
 .
 +tossed(Item, Qtd, Storage)[source(X)]
+	: Qtd <= 0
+<-
+	.abolish(tossed(Item, _, Storage))
+.
++tossed(Item, Qtd, Storage)[source(X)]
 <-
 	+tossed(Item, Qtd, Storage)[source(self)]
 .
@@ -59,7 +64,7 @@
 	: hasItem(Item,Qtd)	           // I'm carrying Item
 	& jobItems(Job, Item, _)       // job requires Item
 <-	
-	.print("I'm carrying a required Item for Job: I will store this", item(Item));
+//	.print("I'm carrying a required Item for Job: I will store this", item(Item));
 	?job(Job, Storage, _, _, _, _);
 	!storeItem(Item, Qtd, Storage);	
 	!storeAllFor(Job);
@@ -72,7 +77,7 @@
 	& not (doing(Job, Me)
 		   & jobItems(Job, Item, _))// item not required for Job
 <-
-	.print("I'm carrying a useless item (I will toss this)");
+//	.print("I'm carrying a useless item (I will toss this)");
 	!retries(4, tossItem(Item, Qtd));	
 	!tossAllUseless;
 .

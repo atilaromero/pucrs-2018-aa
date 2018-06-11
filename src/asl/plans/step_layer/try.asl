@@ -8,7 +8,7 @@
 	: .intend(try(Action))
 	& lastActionResult(successful)
 <-
-	.print("succeed_goal ", try(Action));
+//	.print("succeed_goal ", try(Action));
 	.succeed_goal(try(Action));
 .
 
