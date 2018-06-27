@@ -12,10 +12,16 @@
 	& not doing(_, Me)
 <-
 	!pick_job_solo;
-	!fetchItemsFor(Job);
+	.print("got job!!!!!!!!!!!!!!")
+  ?doing(Job, Me);
+  .print("my job: ", Job)
+  !retrieveItems;
+  !buyItems;
 	?job(Job, Storage, Reward, Start, End, Items)
 	!maybe_charge;
 	!try(goto(Storage));
+	.print("will try deliver")
+	.print(job(Job, Items))
 	!retries(4,try(deliver_job(Job)));
 	!job_done(Job);
 	.print("done: ", job(Job, Reward))
@@ -28,6 +34,7 @@
 	: .my_name(Me)
 	& doing(Job, Me)
 <-
+  .print("job failed: ", Job)
 	!leave_job(Job);
 	+avoidJob(Job);
 	!step(_);

@@ -24,7 +24,7 @@
 
 +!tossItem(Item, Qtd)
 <-	
-	?aStorage(Storage);
+	?nearest(storage,Storage);
 	!tossItem(Item, Qtd, Storage)
 .
 +!tossItem(Item, Qtd, Storage)

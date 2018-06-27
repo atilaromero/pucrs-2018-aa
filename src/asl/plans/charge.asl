@@ -1,5 +1,5 @@
 +!charge
-	: aChargingStation(Name)
+	: nearest(chargingStation,Name)
 <-
 	!try(goto(Name));
 	!do_charge; // at charging station ?Name

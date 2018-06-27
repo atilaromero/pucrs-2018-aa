@@ -5,12 +5,25 @@
 //+storage(Name, Lat, Lon, Cap, Used, Items) : true <- .print("storage(name, lat, lon, cap, used, [item(name1, stored1, delivered1), ...])").
 //+workshop(Name, Lat, Lon) : true <- .print("workshop(name, lat, lon)").
 //+resourceNode(Name, Lat, Lon, Resource) : true <- .print("resourceNode(name, lat, lon, resource)").
+//+lat(D) : true <- .print("lat(d)", D).
+//+lon(D) : true <- .print("lon(d)", D).
 
-aEntity(Name)          :- entity(Name, Team, Lat, Lon, Role).
-aChargingStation(Name) :- chargingStation(Name, Lat, Lon, Role).
-aDump(Name)            :- dump(Name, Lat, Lon).
-aShop(Name)            :- shop(Name, Lat, Lon, Restock, Items).
-aStorage(Name)         :- storage(Name, Lat, Lon, Cap, Used, Items).
-aWorkshop(Name)        :- workshop(Name, Lat, Lon).
-aResourceNode(Name)    :- resourceNode(Name, Lat, Lon, Resource).
+place(entity,Name,Lat,Lon)          :- entity(Name, Team, Lat, Lon, Role).
+place(chargingStation,Name,Lat,Lon) :- chargingStation(Name, Lat, Lon, Role).
+place(dump,Name,Lat,Lon)            :- dump(Name, Lat, Lon).
+place(shop,Name,Lat,Lon)            :- shop(Name, Lat, Lon, Restock, Items).
+place(storage,Name,Lat,Lon)         :- storage(Name, Lat, Lon, Cap, Used, Items).
+place(workshop,Name,Lat,Lon)        :- workshop(Name, Lat, Lon).
+place(resourceNode,Name,Lat,Lon)    :- resourceNode(Name, Lat, Lon, Resource).
 
+//manhattan distance
+mDist(Lat,Lon,D)  :- lat(LatMe) & lon(LonMe)
+				  & X=LatMe-Lat
+				  & Y=LonMe-Lon
+				  & D=math.abs(X)+math.abs(Y).
+				  
+nearest(Type, Name) :- .findall(x(D,Name)
+								,place(Type,Name, Lat, Lon)
+								 & mDist(Lat, Lon, D)
+								,AllPlaces)
+					& .sort(AllPlaces, [x(D,Name)|T]).

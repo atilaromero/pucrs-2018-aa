@@ -3,14 +3,14 @@
 	& jobItems(Job, Item, _)       // job requires Item
 <-	
 	!storeAllFor(Job);
-	!fetchItemsFor(Job);
+	!buyItems;
 .
 +!unloadFor(Job)
 	: hasItem(Item,Qtd)	           // I'm carrying Item
 	& not jobItems(Job, Item, _)   // item not required for Job
 <-
 	!tossAllUseless;	
-	!fetchItemsFor(Job);
+	!buyItems;
 .
 +!unloadFor(Job)
 <-
