@@ -38,10 +38,14 @@
 	!perform_action(recharge);
 .
 
-+step(X)<-!step(X).
++bye<-.stopMAS.
 
-+bye[source(perceipt)]
-<-
-	.print("### Simulation has finished ###");
-	.abolish(_);
++step(X)
+: steps(MAX)
+& X=MAX-1
+<- 
+	!step(X);
+	.abolish(_); //at last step clear all beliefs to next game
 .
+
++step(X)<-!step(X).
