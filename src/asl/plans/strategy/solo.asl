@@ -13,10 +13,10 @@
 <-
 	!pick_job_solo;
 	.print("got job!!!!!!!!!!!!!!")
-  ?doing(Job, Me);
-  .print("my job: ", Job)
-  !retrieveItems;
-  !buyItems;
+	?doing(Job, Me);
+	.print("my job: ", Job)
+	!retrieveItems;
+	!buyItems;
 	?job(Job, Storage, Reward, Start, End, Items)
 	!maybe_charge;
 	!try(goto(Storage));

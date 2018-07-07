@@ -1,7 +1,8 @@
 +!unloadFor(Job)
 	: hasItem(Item,_)	           // I'm carrying Item
 	& jobItems(Job, Item, _)       // job requires Item
-<-	
+<-
+  //unload some items to open space for more	
 	!storeAllFor(Job);
 	!buyItems;
 .
@@ -9,6 +10,7 @@
 	: hasItem(Item,Qtd)	           // I'm carrying Item
 	& not jobItems(Job, Item, _)   // item not required for Job
 <-
+  //unload some items to open space for more  
 	!tossAllUseless;	
 	!buyItems;
 .

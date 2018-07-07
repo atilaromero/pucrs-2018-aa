@@ -4,14 +4,12 @@
 {include("plans/maybe_charge.asl")}
 {include("plans/perform_action.asl")}
 {include("plans/test.asl")}
-{include("plans/communication/single_value.asl")}
-{include("plans/communication/liderBroadcast.asl")}
 {include("plans/step_layer/retries.asl")}
 {include("plans/step_layer/try_goto.asl")}
 {include("plans/step_layer/try.asl")} //must include any other try (like try_goto) before this one
 {include("plans/strategy/buyItems.asl")}
-{include("plans/strategy/retrieveItems.asl")}
 {include("plans/strategy/pick_job_solo.asl")}
+{include("plans/strategy/retrieveItems.asl")}
 {include("plans/strategy/solo.asl")}
 {include("plans/strategy/storeItem.asl")}
 {include("plans/strategy/unloadFor.asl")}
