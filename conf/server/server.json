@@ -1,5 +1,5 @@
 {
-  "tournamentMode" : "round-robin",
+  "tournamentMode" : "random",
   "teamsPerMatch" : 2,
   "teamSize" : 6,
   "launch" : "1s",
