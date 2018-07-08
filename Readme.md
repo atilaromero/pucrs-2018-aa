@@ -14,6 +14,7 @@ Isso irá iniciar o servidor e paralelamente rodar os agentes.
 # Ciclo baseado em steps
 
 Para poder participar do jogo, o agente precisa:
+
  - Esperar por um evento +step(X)
  - Responder qual ação pretende executar. Exemplo: goto(shop4)
 
@@ -51,6 +52,7 @@ Para resolver isto, foi procurado algum tipo de solução que permitisse que um 
 # Solução proposta
 
 A solução proposta consiste em utilizar um modelo de duas camadas:
+
   - *Plan layer*: definição da estratégia e da sequência de passos
 
   - *Step layer*: responder ao eventos +step(X)
@@ -64,6 +66,7 @@ Curiosamente, é possível dizer que este seria um modelo GSLA: Globalmente Sín
 O código-fonte a seguir ilustra este modelo aplicado à intenção de ir a um lugar.
 
 Na *plan layer*, a intenção !try(goto(Y)) é mantida ativa indefinidamente, até que a step layer marque seu fim:
+
 ```
 +!try(goto(Y))
 <-
@@ -94,103 +97,89 @@ atingido e se a bateria acabou. A ação _goto(Y)_ é repetida até que o agente
 .
 ```
 
+Para outras ações foi criado um tratamento genérico. Na _plan layer_, primeiro é executada a ação. Depois disso a intenção aguarda indefinidamente:
+
+```
++!try(Action)
+<-
+	Action;
+	.wait(false);
+.
+```
+
+Na _step layer_, o resultado da última ação é consultado para decidir se a intenção foi bem sucedida ou falhou:
+```
++!step(X)
+	: .intend(try(Action))
+	& lastActionResult(successful)
+<-
+	.succeed_goal(try(Action));
+.
+
++!step(X)	//lastActionResult not successful
+	: .intend(try(Action))
+<-
+	.fail_goal(try(Action));
+.
+```
+
+Como o servidor do jogo gera falhas aleatórias para as ações, é útil utilizar uma abstração similar para retentar uma intenção que falhou:
+```
++!retries(M, Intention)
+<-
+	!!sub_retries(M, M, Intention);
+	.wait(false);
+.
+
++!sub_retries(M, N, Intention)
+<-
+	!Intention;
+	.succeed_goal(retries(M, Intention));
+.
+-!sub_retries(M, N, Intention)
+	: N > 1
+<-
+	!sub_retries(M, N-1, Intention);
+.
+
+-!sub_retries(M, N, Intention)
+<-
+	.fail_goal(retries(M,Intention));
+.
+```
 
 # Estratégia de teste
 
+Utilizando este _design pattern_, a tarefa de especificar em alto nível um plano para o agente é simplificada: é possível definir uma sequência de intenções sem a constante preocupação de como e quando o servidor do jogo vai ser informado sobre as jogadas do agente.
+
+A estratégia utilizada nos testes é baseada em cada veículo pegar um trabalho diferente. Ao se responsabilizar por um trabalho, o agente avisa os outros e aguarda resposta positiva. Se algum agente também tiver escolhido aquele trabalho, avisa. Se houver disputa, a seleção de qual agente ficará com o trabalho é feita por ordem alfabética/numérica: o menor ganha.
+
+Outros fatores que são tratados:
+
+  - carga do veículo: os veículos não escolhem jobs cujo montante de itens exceda sua capacidade.
+  - desistência de _jobs_: um _job_ pode ser invalidado, seja porque expirou, ou porque foi completado por outro time. Se um veículo não consegue concluir um trabalho, ele desiste dele e não o seleciona novamente.
+  - reaproveitamento de itens: itens de _jobs_ que não puderam ser concluídos são reaproveitados em outros _jobs_.
+  - escolha de lojas e _chargingStations_ por proximidade.
+
 # Resultados
 
-
-## Aprimoramento
-
-Para tentar melhorar os agentes em algum destes aspectos, foram feitas várias modificações de maneira incremental. No entanto, este processo se mostrou extremamente difícil, porque era difícil evitar a propagação de efeitos colaterais. Ou seja, era comum que ao tentar corrigir determinado comportamento, outro comportamento também fosse afetado.
-
-Mais tarde, foi concluído que esta dificuldade estava relacionada com o tempo de vida dos planos em relação às rodadas do jogo.
-...
-
-A solução adotada originalmente no time "dummy" era a de usar variáveis que indicassem a intenção atual do agente e, a cada rodada, avaliar o estado do ambiente e decidir a próxima ação.
-A solução encontrada foi a criação de um tipo de plano, chamado de "!try", e de uma variável, também chamada de "try". Quando é executado um plano, por exemplo, "!try(goto(Y))", o seguinte código é executado:
+Em dez partidas contra um time de testes denominado "dummy", foram obtidos os seguintes resultados:
 ```
-+!try(goto(Y))
-<-
-	+try(goto(Y));
-	!step(X);
-	.wait({-try(goto(Y))});
-.
+{'A': 52147, 'B': 48947}
+{'A': 54204, 'B': 49159}
+{'A': 49876, 'B': 49132}
+{'A': 51632, 'B': 49051}
+{'A': 50475, 'B': 49418}
+{'A': 50929, 'B': 49143}
+{'A': 51795, 'B': 49475}
+{'A': 52254, 'B': 49115}
+{'A': 52276, 'B': 49261}
+{'A': 50432, 'B': 49115}
 ```
 
- - A instrução "+try(goto(Y));" acrescenta a variável "try" a base de conhecimento. Essa variável indica que há um plano em execução.
- - A segunda instrução, "!step(X);", força a execução do plano de curto prazo, que também é iniciado quando há um evento do tipo "+step(X)". A resposta a este evento, informando ao servidor a jogada do agente, será tratada pelo trecho de código que tratar eventos do tipo "+!step(X): try(goto(Y)) <-".
- - A terceira instrução, ".wait({-try(goto(Y))});" aguarda que a variável "try" não esteja mais na base de conhecimento. Quando isto ocorrer o plano será concluído e, se fizer parte de um plano maior, o próximo passo será executado.
+Na figura 1, em azul é mostrada a progressão do saldo do time 'A', que utiliza a estratégia _!solo_ e em vermelho é mostrada a progressão do saldo do time 'B', que é o time "dummy".
 
-A variável "try" é retirada da base de conhecimento quando o agente chega ao seu destino:
-```
-+!step(X)
-	: try(goto(Y))
-	& facility(Y)
-<-
-	-try(goto(Y));
-.
-```
-
-Se o agente está no meio do percurso e precisa responder qual sua jogada, ele informa que pretende continuar indo:
-```
-+!step(X)
-	: try(goto(Y))
-<-
-	!perform_action(goto(Y));
-.
-```
-
-Se acaba sua bateria, ele recarrega usando painel solar:
-```
-+!step(X)
-	: try(goto(Y))
-	& batteryOut
-<-
-	!perform_action(recharge);
-.
-```
-
-Usando esta abordagem, passa a ser possível usar um plano do tipo:
-```
-+!solo
-	: .my_name(Me)
-	& not doing(_, Me)
-<-
-	!pick_job_solo;
-	!check_job_solo;
-	!solo;
-.
-+!solo
-	: .my_name(Me)
-	& doing(Job, Me)
-<-
-	!fetchItemsFor(Job);
-	?job(Job, Storage, Reward, Start, End, Items)
-	!maybe_charge;
-	!try(goto(Storage));
-	!try(deliver_job(Job));
-	!job_done(Job);
-	!leave_job(Job);
-	!maybe_charge;
-.
-```
- - "!pick_job_solo;" e "!check_job_solo;" encontram um trabalho para o agente, que será o único do time a fazê-lo.
- - "!fetchItemsFor(Job);" internamente usa as instruções "!try(goto(Shop))" e "!try(buy(Item, Qtd))" para comprar items.
- - "!maybe_charge;" verifica se a bateria está baixa (valor arbitrário de <40%) e, se estiver, vai até uma chargingStation e recarrega.
- - "!try(goto(Storage));" e "!try(deliver_job(Job));" são as abstrações de alto nível criadas: os detalhes de envio das jogadas e leitura dos resultados são tratados mas não atrapalham a descrição do plano. "!try(deliver_job(Job));" usa um mecanismo similar ao mostrado para "+!try(goto(Y))", só que conta as tentativas e, se falhar 5 vezes, marca que o flano falhou usando ".fail".
-
-## Situação atual do time
-
-  A estratégia atual é baseada em cada veículo pegar um trabalho diferente. Ao se responsabilizar por um trabalho, o agente avisa os outros e aguarda resposta positiva. Se algum agente também tiver escolhido aquele trabalho, avisa. Se houver disputa, a seleção de qual agente ficará com o trabalho é feita por ordem alfabética/numérica: o menor ganha.
-
-  Atualmente o time "connectionA" ganha do time "dummy" e termina a partida com mais dinheiro do que começou, o que é um grande progresso, pois antes da nova abordagem o time "connectionA" além de perder do "dummy", terminava a partida com menos dinheiro do que tinha começado. Mas ainda existem muitas possíveis melhorias:
-
-  - Considerar a carga do veículo. Os 2 drones param de trabalhar logo no início, pois tentam pegar todos os itens de um trabalho e excedem sua carga total. Talvez seja necessário um plano separado para eles. Com certeza é preciso verificar o peso dos itens.
-  - Alguns veículos param de trabalhar quando estão fazendo um trabalho que por algum motivo não é mais válido, ou porque expirou, ou porque foi completado por outro time. Requer a criação de algum mecanismo para desistir do trabalho atual.
-  - A escolha dos trabalhos não leva em consideração preço, itens ou data de expiração.
-  - Os agentes não ajudam um ao outro. Esse item talvez não seja alterado, pois seria seguir uma estratégia diferente da atual.
-  - Um agente não faz mais de um trabalho ao mesmo tempo.
+![10 rodadas](grafico.png)
 
 # Github
 
