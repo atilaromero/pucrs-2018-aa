@@ -17,10 +17,10 @@ Para poder participar do jogo, o agente precisa:
  - Esperar por um evento +step(X)
  - Responder qual ação pretende executar. Exemplo: goto(shop4)
 
-Esta necessidade induz um estilo de programação em que é necessário que cada intenção termine em com o
+Esta necessidade leva a um estilo de programação em que é necessário que cada intenção termine em com o
 envio de uma ação ao servidor do jogo.
 
-Isso leva a um ciclo composto das seguintes etapas:
+O resultado é um ciclo composto das seguintes etapas:
 
   - Esperar o evento +step(X)
   - Determinar a intenção atual
@@ -28,8 +28,72 @@ Isso leva a um ciclo composto das seguintes etapas:
   - Decidir o que fazer
   - Enviar uma ação ao servidor do jogo
 
+Quando uma rodada é iniciada, é esperada uma reposta relativamente rápida que indique qual a jogada seguinte do agente. Para chegar nesta resposta, segue-se uma série de passos, definidos por objetivos parciais, que terminam por entregar a resposta ao servidor, que pode ser, por exemplo, a ação de ir até uma loja. No entanto, para fazer um planejamento mais elaborado, é preciso definir várias etapas, como ir à loja, comprar um produto e levar a um depósito. Mas o problema é: como representar este planejamento de longo prazo, se os planos que transmitem as jogadas precisam ser curtos? Os eventos que iniciam a rodada são do tipo "+step(X)", como fazer para a partir deste evento inical continuar um plano que foi interrompido à espera de um evento externo?
+
+Uma solução que deixa a desejar é utilizar uma função central que decida o próximo passo.
+
+Esta abordagem tem vários problemas:
+
+  - Lógica de programação concentrada nas condições de tratamento dos eventos +step(X): só um tratamento pode ser escolhido
+  - Condições exageradamente extensas
+  - Falta de comprometimento com um plano: as decisões têm curto prazo
+  - Alteração em um trecho de código pode afetar trechos não desejados
+  - Dificuldade de alterar a estratégia: necessário revisar todo o código
+  - Bugs são difíceis de corrigir
+
+
+Conforme novos planos de longo prazo precisam ser acrescentados, a complexidade dessa função central aumenta, pois ela precisa considerar vários fatores para descobrir qual o plano de longo prazo estava em vigor. Realizar esta tarefa sem acrescentar novas variáveis requer ajustes precisos na função central, com alto risco de afetar comportamentos em outros tipos de planos. Por exemplo, há o risto de, ao ajustar a estratégia de recarga a estratégia de compra ser afetada. Acrescentar novas variáveis também não é uma solução ótima, pois torna o código confuso e aumenta a chance de haver combinações de estados de variáveis não tratados.
+
+O que ocorre com esta "quebra" em rodadas é que o mecanismo de controle de planos não está efetivamente sendo usado para planos de longo prazo, ele está sendo emulado.
+
+Para resolver isto, foi procurado algum tipo de solução que permitisse que um plano, ao precisar ser interrompido por emissão e espera de eventos externos, não deixasse de estar em vigor. Por exemplo, se o plano atual é ir até uma loja, é desejável que o envio do comando de ir até a loja não finalize o plano e durante o trajeto, se forem necessários vários reexecuções deste comando, que estes reenvios sejam feitos de alguma forma automatica e que o plano só seja finalizado quando o veículo chegar ao seu destino ou concluir que falhou.
 
 # Solução proposta
+
+A solução proposta consiste em utilizar um modelo de duas camadas:
+  - *Plan layer*: definição da estratégia e da sequência de passos
+
+  - *Step layer*: responder ao eventos +step(X)
+
+A *plan layer* define as intenções atuais, sem ter a obrigação de terminar em uma rodada.
+
+A *step layer* verifica qual a intenção vigente, envia o comando adequado ao servidor de jogo e informa à outra camada quando as intenções foram atingidas ou falharam. Ela não toma decisões estratégicas
+
+Curiosamente, é possível dizer que este seria um modelo GSLA: Globalmente Síncrono Localmente Assíncrono, o que é o oposto do  que é comumente encontrado.
+
+O código-fonte a seguir ilustra este modelo aplicado à intenção de ir a um lugar.
+
+Na *plan layer*, a intenção !try(goto(Y)) é mantida ativa indefinidamente, até que a step layer marque seu fim:
+```
++!try(goto(Y))
+<-
+	!step(X);
+	.wait(false);
+.
+```
+
+Na *step layer*, a cada rodada é verificado se o objetivo foi
+atingido e se a bateria acabou. A ação _goto(Y)_ é repetida até que o agente chegue ao seu destino:
+```
++!step(X)	// reached destination
+	: .intend(try(goto(Y)))
+	& facility(Y)
+<-
+	.succeed_goal(try(goto(Y)));
+.
++!step(X)	// on route, but must recharge
+	: .intend(try(goto(Y)))
+	& batteryOut
+<-
+	recharge;
+.
++!step(X)	// on route
+	: .intend(try(goto(Y)))
+<-
+	goto(Y);
+.
+```
+
 
 # Estratégia de teste
 
@@ -40,13 +104,10 @@ Isso leva a um ciclo composto das seguintes etapas:
 
 Para tentar melhorar os agentes em algum destes aspectos, foram feitas várias modificações de maneira incremental. No entanto, este processo se mostrou extremamente difícil, porque era difícil evitar a propagação de efeitos colaterais. Ou seja, era comum que ao tentar corrigir determinado comportamento, outro comportamento também fosse afetado.
 
-Mais tarde, foi concluído que esta dificuldade estava relacionada com o tempo de vida dos planos em relação às rodadas do jogo. Ocorre que quando uma rodada é iniciada, é esperada uma reposta relativamente rápida que indique qual a jogada seguinte do agente. Para chegar nesta resposta, segue-se uma série de passos, definidos por objetivos parciais, que terminam por entregar a resposta ao servidor, que pode ser, por exemplo, a ação de ir até uma loja. No entanto, para fazer um planejamento mais elaborado, é preciso definir várias etapas, como ir à loja, comprar um produto e levar a um depósito. Mas o problema é: como representar este planejamento de longo prazo, se os planos que transmitem as jogadas precisam ser curtos? Os eventos que iniciam a rodada são do tipo "+step(X)", como fazer para a partir deste evento inical continuar um plano do meio, que foi interrompido à espera de um evento externo?
+Mais tarde, foi concluído que esta dificuldade estava relacionada com o tempo de vida dos planos em relação às rodadas do jogo.
+...
 
-A solução adotada originalmente no time "dummy" era a de usar variáveis que indicassem a intenção atual do agente e, a cada rodada, avaliar o estado do ambiente e decidir a próxima ação. Para isso, é necessário definir uma função central que decida o próximo passo.
-O problema dessa abordagem é que, conforme novos planos de longo prazo precisam ser acrescentados, a complexidade dessa função central aumenta, pois ela precisa considerar vários fatores para descobrir qual o plano de longo prazo estava em vigor. Realizar esta tarefa sem acrescentar novas variáveis requer ajustes precisos na função central, com alto risco de afetar comportamentos em outros tipos de planos. Por exemplo, há o risto de, ao ajustar a estratégia de recarga a estratégia de compra ser afetada. Acrescentar novas variáveis também não é uma solução ótima, pois torna o código confuso e aumenta a chance de haver combinações de estados de variáveis não tratados.
-
-O que ocorre com esta "quebra" em rodadas é que o mecanismo de controle de planos não está efetivamente sendo usado para planos de longo prazo, ele está sendo emulado. Para resolver isto, foi procurado algum tipo de solução que permitisse que um plano, ao precisar ser interrompido por emissão e espera de eventos externos, não deixasse de estar em vigor. Por exemplo, se o plano atual é ir até uma loja, é desejável que o envio do comando de ir até a loja não finalize o plano e durante o trajeto, se forem necessários vários reexecuções deste comando, que estes reenvios sejam feitos de alguma forma automatica e que o plano só seja finalizado quando o veículo chegar ao seu destino ou concluir que falhou.
-
+A solução adotada originalmente no time "dummy" era a de usar variáveis que indicassem a intenção atual do agente e, a cada rodada, avaliar o estado do ambiente e decidir a próxima ação.
 A solução encontrada foi a criação de um tipo de plano, chamado de "!try", e de uma variável, também chamada de "try". Quando é executado um plano, por exemplo, "!try(goto(Y))", o seguinte código é executado:
 ```
 +!try(goto(Y))
